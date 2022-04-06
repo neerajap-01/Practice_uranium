@@ -1,33 +1,30 @@
 const express = require('express');
 const logger = require('./logger')
+const Welcome = require("../logger/logger")
+const helper = require("../util/helper")
+const formatter = require("../validator/formatter")
+const lodash = require("../loadash/loadash_depend")
 
 const router = express.Router();
 
 router.get('/test-me', function (req, res) {
-    console.log('I am inside the first route handler')
-    console.log('The endpoint value is', logger.endpoint)
-    console.log('Calling log function')
-    logger.logging()
-    res.send('My first ever api!')
-});
-
-router.get('/test-me2', function (req, res) {
-    console.log('I am inside the second route handler')
-    res.send('My second ever api!')
+    res.send(Welcome.msg() + "</br>" + helper.date() + "</br>" + helper.month() + "</br>" + helper.info() + "</br>" + formatter.wordString() + "</br>" + formatter.trim() + "</br>" + formatter.upperCaseWord() + "</br>" + formatter.lowerCaseWord());
 });
 
 
-router.get('/test-me5', function (req, res) {
-    res.send('My final ever api!')
-});
-
-router.get('/test-me3', function (req, res) {
-    res.send('My first ever api!')
-});
-
-router.get('/test-me4', function (req, res) {
-    res.send('My first ever api!')
-});
+router.get('/hello', function(req, res, next) {
+    res.send(lodash.Array());
+    // res.send(lodash.Array() + "</>" + lodash.oddNums() + "</br>" + lodash.uniqueArr() + "</br>" + lodash.Object());
+})
+router.get('/hello2', function(req, res, next) {
+    res.send(lodash.oddNums());
+})
+router.get('/hello3', function(req, res, next) {
+    res.send(lodash.uniqueArr());
+})
+router.get('/hello4', function(req, res, next) {
+    res.send(lodash.Object());
+})
 
 module.exports = router;
 // adding this comment for no reason
