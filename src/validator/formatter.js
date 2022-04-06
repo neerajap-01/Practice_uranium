@@ -13,7 +13,7 @@ const upperCaseWord = function(){
 }
 
 const lowerCaseWord = function(){
-    return `Upper case of the hardcoded string ${word.toLowerCase()}`;// toLowerCase() converts the string to lower case
+    return `Lower case of the hardcoded string ${word.toLowerCase()}`;// toLowerCase() converts the string to lower case
 }
 
 
