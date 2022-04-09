@@ -34,17 +34,15 @@ let players = [
 ]
 
 router.post('/players',function(req, res){
-    for(let i = 0; i<players.length;i++){
-        console.log(req.body.name === players[i].name);
-        if(req.body.name === players[i].name){
-            res.send( { msg: "Players data already exist." } )
-            break;
-        } else {
-            players.push(req.body);
-            break;
-        } 
+    for(let i=0; i<players.length; i++){
+        if(players[i].name == req.body.name){
+            res.send( {msg : "Player data already exists"} );
+            return;
+        }
     }
+    players.push(req.body);
     res.send ( { data: players, status: true } )
+    
 })
 
 module.exports = router;
