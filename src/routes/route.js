@@ -1,6 +1,10 @@
 const express = require('express');
+const result = require('../controllers/missingNumbers');
 
 const router = express.Router();
+
+router.get('/missingNumbers', result.missingNumbers);
+router.get('/missingNums', result.missingNums);
 
 router.get('/test-me', function (req, res) {
     // let a = { msg: "My first ever API response in JSON !!"} 
