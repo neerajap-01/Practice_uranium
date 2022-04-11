@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema({
     authorName: String,
     category: {
         type: String,
-        enum: ['Adventure', 'Sci-Fi', 'Crime', 'Drama', 'Fantasy', 'Horror'],
+        enum: ['Adventure', 'Sci-Fi', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Finance'],
     },
     year: Number,
 }, { timestamps: true });
