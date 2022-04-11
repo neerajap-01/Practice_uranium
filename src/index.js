@@ -2,11 +2,18 @@ const express = require('express');
 var bodyParser = require('body-parser');
 
 const route = require('./routes/route.js');
+const mongoose = require('mongoose');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+mongoose.connect('mongodb+srv://Uranium-Batch:aruSjkdGdfhc9MRK@functionup.eel5r.mongodb.net/Neeraj01DB?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+})
+.then(() => { console.log('Connected to MongoDB') })
+.catch(err => { console.log('Error connecting to MongoDB: ' + err) });
 
 app.use('/', route);
 
