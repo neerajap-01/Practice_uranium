@@ -6,12 +6,20 @@ const bookSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
-    authorName: String,
-    category: {
-        type: String,
-        enum: ['Adventure', 'Sci-Fi', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Finance'],
+    price: {
+        indianPrice: String,
+        europeanPrice: String,
     },
-    year: Number,
+    year: {
+        type: Number,
+        default: 2021,
+    },
+    tags: [ String ],
+    authorName: String,
+    totalPages: Number,
+    stockAvailable: Boolean,
 }, { timestamps: true });
 
 module.exports = mongoose.model('Book', bookSchema); //Book ==>>> books this is done by MongoDB itself i.e it changes capital B to small b and Book to Books in plural.
+
+//['Adventure', 'Sci-Fi', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Finance']
