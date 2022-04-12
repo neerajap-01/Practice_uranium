@@ -21,5 +21,3 @@ const bookSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Book', bookSchema); //Book ==>>> books this is done by MongoDB itself i.e it changes capital B to small b and Book to Books in plural.
-
-//['Adventure', 'Sci-Fi', 'Crime', 'Drama', 'Fantasy', 'Horror', 'Finance']
