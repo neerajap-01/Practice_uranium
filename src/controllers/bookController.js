@@ -29,7 +29,7 @@ const getXINRBooks = async function(req, res){
 }
 
 const getRandomBooks  = async function(req, res){
-    const showBooks = await bookModel.find({ stockAvailable: true, totalPages: {$gt: 300} });
+    const showBooks = await bookModel.find({ $or: [{stockAvailable: true}, {totalPages: {$gt: 300}}] });
     res.send( { data: showBooks } );
 }
 
