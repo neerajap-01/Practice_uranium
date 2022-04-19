@@ -1,4 +1,6 @@
 const express = require('express');
+const Middleware = require('../src/middleWare/middleWare');
+
 var bodyParser = require('body-parser');
 
 const route = require('./routes/route.js');
@@ -7,6 +9,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(Middleware.logData)
 
 app.use('/', route);
 
