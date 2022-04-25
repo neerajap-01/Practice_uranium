@@ -78,8 +78,26 @@ let getOtp = async function (req, res) {
     }
 }
 
+const vaccineSlots = async (req, res) =>{
+    try{
+        let districtId = req.query.district_Id;
+        let date = req.query.date;
+
+        let options = {
+            method: 'get',
+            url: `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${districtId}&date=${date}`
+        }
+
+        let response = await axios(options);
+        res.status(200).send({ status: true, data: response.data});
+    }catch (err) {
+        res.status(500).send({ msg: err.message })
+    }
+}
+
 
 module.exports.getStates = getStates
 module.exports.getDistricts = getDistricts
 module.exports.getByPin = getByPin
 module.exports.getOtp = getOtp
+module.exports.vaccineSlots = vaccineSlots
