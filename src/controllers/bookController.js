@@ -1,22 +1,52 @@
 const Book = require('../models/bookModel');
 const User = require('../models/userModel');
 const Review = require('../models/reviewModel');
+const AWS = require('aws-sdk');
 const { isValidBody, isValidObjectId, validString, validDate, validISBN } = require('../utils/validation');
 
+AWS.config.update({
+  accessKeyId: "AKIAY3L35MCRUJ6WPO6J",
+  secretAccessKey: "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",
+  region: "ap-south-1"
+});
 
-       // POST /books
+const uploadFile = async (file) => {
+  return new Promise(function(resolve, reject) {
+    //this function will upload file to aws and return the link
+    let s3= new AWS.S3({apiVersion: '2006-03-01'}); // we will be using the s3 service of aws
+
+    let uploadParams = {
+      ACL: "public-read",
+      Bucket: "classroom-training-bucket",
+      Key: "Neeraj/Books-Management/" + file.originalname,
+      Body: file.buffer 
+    }
+
+    s3.upload(uploadParams, function(err,data){
+      if(err) {
+        console.log(err)
+        return reject({ "error": err })
+      }
+      console.log(data);
+      return resolve(data.Location)
+    })
+  })
+}
+
+
+    // POST /books
 
 const createBook = async function (req, res) {
   try {
     let data = req.body;
-
+    let files = req.files;
     // Validate the Body
 
     if (isValidBody(data)) {
       return res.status(400).send({ status: false, message: "Enter Book details" });
     }
 
-    if(data.hasOwnProperty('reviews')) {
+    if(data.reviews in data) {
       return res.status(400).send({ status: false, message: "Cannot edit review" });
     }
 
@@ -29,7 +59,12 @@ const createBook = async function (req, res) {
     if (!data.excerpt) {
       return res.status(400).send({ status: false, message: "Excerpt is required" });
     }
-
+    if (files && files.length < 0){
+      return res.status(400).send({ status: false, message: "Please upload book cover" })
+    }
+    
+    let uploadFileUrl = await uploadFile(files[0]);
+    data.bookCover = uploadFileUrl;
     // check the ISBN
     if (!data.ISBN) {
       return res.status(400).send({ status: false, message: "ISBN number is required" });
@@ -103,7 +138,7 @@ const getFilteredBooks = async (req, res) => {
       return res.status(200).send({ status: true, count: getBooks.length, message: "Books list", data: getBooks });
     }
 
-    if (data.hasOwnProperty('userId')) {
+    if (data.userId in data) {
       if (!isValidObjectId(data.userId)) return res.status(400).send({ status: false, message: "Enter a valid user id" });
       let { ...tempData } = data;
       delete (tempData.userId);
@@ -153,6 +188,8 @@ const getBookById = async (req, res) => {
   }
 }
 
+
+
  // PUT /books/:bookId
 const updateBook = async (req, res) => {
   try {
@@ -173,14 +210,14 @@ const updateBook = async (req, res) => {
       return res.status(400).send({ status: false, message: "ReleasedAt date is required" })
     }
 
-    if(data.hasOwnProperty('userId') || data.hasOwnProperty('reviews') || data.hasOwnProperty('isDeleted') || data.hasOwnProperty('deletedAt')) return res.status(400).send({ status: false, message: 'Action is Forbidden' });
+    if(data.userId in data || data.reviews in data || data.isDeleted in data || data.deletedAt in data) return res.status(400).send({ status: false, message: 'Action is Forbidden' });
 
-    if(data.hasOwnProperty('title')) {
+    if(data.title in data) {
       let checkUniqueValue = await Book.findOne({ title: data.title })
 
       if (checkUniqueValue) return res.status(400).send({ status: false, message: "Title already exist" })
     }
-    if(data.hasOwnProperty('ISBN')) {
+    if(data.ISBN in data) {
       if(validISBN(data.ISBN)) {
         return res.status(400).send({ status: false, message: "Enter a valid ISBN number" })
       }
@@ -208,6 +245,8 @@ const updateBook = async (req, res) => {
     res.status(500).send({ status: false, message: err.message })
   }
 }
+
+
 
 // DELETE /books/:bookId
 const deleteBook = async function (req, res) {
